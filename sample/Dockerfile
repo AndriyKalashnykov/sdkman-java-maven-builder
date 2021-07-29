@@ -3,9 +3,9 @@ FROM andriykalashnykov/sdkman:mvn-3.8.1-jdk-8.0.292.hs-adpt as build
 ARG USER_NAME="user"
 
 WORKDIR /home/$USER_NAME
-
 RUN git clone https://github.com/AndriyKalashnykov/tomcat-root-war.git
-# RUN mvn dependency:go-offline 
+WORKDIR /home/$USER_NAME/tomcat-root-war
+RUN mvn dependency:go-offline 
 RUN mvn package -f /home/$USER_NAME/tomcat-root-war/pom.xml
 
 # Tomcat 9.0.34-0 and JDK 1.8.242-0
