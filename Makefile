@@ -8,6 +8,13 @@ USER_UID			:=	1000
 USER_GID			:=	1000
 USER_NAME			:=	user
 
+# make sure docker is installed
+DOCKER_EXISTS := @echo "Found docker"
+DOCKER_WHICH := $(shell which adocker1)
+ifeq ($(strip $(DOCKER_WHICH)),)
+	DOCKER_EXISTS := @echo "ERROR: docker not found. See: https://docs.docker.com/get-docker/" && exit 1
+endif
+
 check-env:
 ifndef DOCKER_LOGIN
 	$(error DOCKER_LOGIN is undefined)
@@ -16,6 +23,8 @@ endif
 ifndef DOCKER_PWD
 	$(error DOCKER_PWD is undefined)
 endif
+
+	$(DOCKER_EXISTS)
 
 login: check-env
 	@docker login --username $$DOCKER_LOGIN --password $$DOCKER_PWD docker.io
