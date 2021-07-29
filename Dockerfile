@@ -15,7 +15,7 @@ RUN groupadd -g $USER_GID $USER_NAME && \
 
 # Installing basic packages
 RUN apt-get update && \
-	apt-get install -y zip unzip curl tree && \
+	apt-get install -y zip unzip curl tree git && \
 	rm -rf /var/lib/apt/lists/* && \
 	rm -rf /tmp/*
 
