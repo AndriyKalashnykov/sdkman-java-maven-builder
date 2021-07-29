@@ -10,7 +10,7 @@ USER_NAME			:=	user
 
 # make sure docker is installed
 DOCKER_EXISTS := @echo "Found docker"
-DOCKER_WHICH := $(shell which adocker1)
+DOCKER_WHICH := $(shell which adocker)
 ifeq ($(strip $(DOCKER_WHICH)),)
 	DOCKER_EXISTS := @echo "ERROR: docker not found. See: https://docs.docker.com/get-docker/" && exit 1
 endif
