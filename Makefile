@@ -14,7 +14,6 @@ IMAGE_NAME 			:= 	$$DOCKER_LOGIN/sdkman:mvn-${MAVEN_VERSION}-jdk-${JAVA_VERSION}
 SAMPLE_IMAGE_NAME	:= 	$$DOCKER_LOGIN/bitnami-tomcat9-jdk18-root-war
 SAMPLE_IMAGE_FILE   ?= `pwd`/sample/Dockerifle
 
-
 DOCKER_REGISTRY     :=  docker.io
 export DOCKER_SCAN_SUGGEST=false
 
@@ -39,8 +38,12 @@ endif
 
 #help: @ List available tasks on this project
 help:
-	@echo "Available tasks:"
-	@grep -E '[a-zA-Z\.\-]+:.*?@ .*$$' $(MAKEFILE_LIST)| tr -d '#' | awk 'BEGIN {FS = ":.*?@ "}; {printf "\033[32m%-14s\033[0m - %s\n", $$1, $$2}'
+	@clear
+	@echo "Usage: make COMMAND"
+	@echo
+	@echo "Commands :"
+	@echo
+	@grep -E '[a-zA-Z\.\-]+:.*?@ .*$$' $(MAKEFILE_LIST)| tr -d '#' | awk 'BEGIN {FS = ":.*?@ "}; {printf "\033[32m%-13s\033[0m - %s\n", $$1, $$2}'
 
 #check-env: @ Check environment variables and installed tools
 check-env:
@@ -122,16 +125,20 @@ endif
 
 	@docker builder prune -af
 
+#build-sample: @ Build sample image
 build-sample: check-env
 	@DOCKER_BUILDKIT=1 docker build -t $(SAMPLE_IMAGE_NAME) ./sample
 
-run-sample: login
+#start-sample: @ Start sample image
+start-sample: login
 	@docker run --name t9 -d --rm -p 8080:8080 -p 8443:8443 $(SAMPLE_IMAGE_NAME)
 
-exec-sample: login
+#test-sample: @ Test sample image
+test-sample: login
 
 	@docker exec -t t9 sh -c "curl -k https://localhost:8443/index.html"
 
+#stop-sample: @ Stop sample image
 stop-sample: login
 	@docker stop t9s
 
@@ -139,6 +146,7 @@ SAMPLE_IMAGE_CMD := docker images | grep $(SAMPLE_IMAGE_NAME) | awk '{print $$3}
 SAMPLE_IMAGE_ID  := $(shell $(SAMPLE_IMAGE_CMD))
 SAMPLE_IMAGE_CNT := $(shell $(SAMPLE_IMAGE_CMD) | wc -l)
 
+#delete-sample: @ Delete sample image locally
 delete-sample: check-env
 
 ifeq ($(shell test $(SAMPLE_IMAGE_CNT) -gt 0; echo $$?),0)
