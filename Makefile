@@ -11,7 +11,7 @@ USER_GID			:=	1000
 USER_NAME			:=	user
 
 IMAGE_NAME 			:= 	$$DOCKER_LOGIN/sdkman:mvn-${MAVEN_VERSION}-jdk-${JAVA_VERSION}
-SAMPLE_IMAGE_NAME	:= 	$$DOCKER_LOGIN/bitnami-tomcat9-jdk18-root-war
+SAMPLE_IMAGE_NAME	:= 	$$DOCKER_LOGIN/bitnami-tomcat9-jdk18-root-war:latest
 SAMPLE_IMAGE_FILE   ?= `pwd`/sample/Dockerifle
 
 DOCKER_REGISTRY     :=  docker.io
@@ -77,15 +77,17 @@ it: check-env
 push: login build
 	@docker push $(IMAGE_NAME)
 
-CNT_IMAGE := $(shell docker images | grep $(IMAGE_NAME) | awk '{print $$3}' | wc -l)
+IMAGE_CMD := docker images --filter=reference=$(IMAGE_NAME) --format "{{.ID}}" | awk '{print $$1}'
+IMAGE_ID  := $(shell $(IMAGE_CMD))
+IMAGE_CNT := $(shell $(IMAGE_CMD) | wc -l)
 
-#delete: @ Push builder image locally
+#delete: @ Delete builder image locally
 delete: check-env
 
-ifeq ($(shell test $(CNT_IMAGE) -gt 0; echo $$?),0)
+ifeq ($(shell test $(IMAGE_CNT) -gt 0; echo $$?),0)
 # remove image
-	@docker -q rmi $(IMAGE_NAME) 2>/dev/null
-endif
+	docker rmi -f $(IMAGE_ID) 
+endif	
 
 CNT_TAG_CMD     := docker images | grep '<none>' | awk '{print $$3}'
 CNT_TAG         := $(shell $(CNT_TAG_CMD) | wc -l)
@@ -140,9 +142,9 @@ test-sample: login
 
 #stop-sample: @ Stop sample image
 stop-sample: login
-	@docker stop t9s
+	@docker stop t9
 
-SAMPLE_IMAGE_CMD := docker images | grep $(SAMPLE_IMAGE_NAME) | awk '{print $$3}'
+SAMPLE_IMAGE_CMD := docker images --filter=reference=$(SAMPLE_IMAGE_NAME) --format "{{.ID}}" | awk '{print $$1}'
 SAMPLE_IMAGE_ID  := $(shell $(SAMPLE_IMAGE_CMD))
 SAMPLE_IMAGE_CNT := $(shell $(SAMPLE_IMAGE_CMD) | wc -l)
 
