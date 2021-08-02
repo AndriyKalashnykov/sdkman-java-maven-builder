@@ -5,12 +5,12 @@ Docker image with various Java and Maven versions to build Java Maven projects
 
 * Docker
 
-## Define DockerHub login and password
-
-```bash
-DOCKER_LOGIN= 
-DOCKER_PWD=
-```
+* DockerHub login and password
+  
+    ```bash
+    DOCKER_LOGIN= 
+    DOCKER_PWD=
+    ```
 
 ### Build Docker Image with default JAVA_VERSION and MAVEN_VERSION
 
