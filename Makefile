@@ -101,7 +101,6 @@ CNT_NETWORK     := $(shell $(CNT_NETWORK_CMD) | wc -l)
 CNT_DANGLING_CMD := docker volume ls -qf dangling=true
 CNT_DANGLING     := $(shell $(CNT_DANGLING_CMD) | wc -l)
 
-
 #cleanup: @ Cleanup docker images, containers, volumes, networks, build cache
 cleanup:
 
