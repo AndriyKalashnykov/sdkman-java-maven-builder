@@ -42,11 +42,6 @@ make it
 make version
 ```
 
-### Run Maven version
-
-```bash
-make run
-```
 ### Push Docker to DockerHub
 
 ```bash
