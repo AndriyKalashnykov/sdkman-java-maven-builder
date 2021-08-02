@@ -12,6 +12,12 @@ Docker image with various Java and Maven versions to build Java Maven projects
     DOCKER_PWD=
     ```
 
+### Login to the Docker Image registry
+
+```bash
+make login
+```
+
 ### Build Docker Image with default JAVA_VERSION and MAVEN_VERSION
 
 ```bash
@@ -30,10 +36,10 @@ make build JAVA_VERSION=16.0.1.hs-adpt MAVEN_VERSION=3.8.1 USER_UID=1000 USER_GI
 make it
 ```
 
-### Run Docker Image Interactively
+### Run `maven -version` Docker Image
 
 ```bash
-make it
+make version
 ```
 
 ### Run Maven version

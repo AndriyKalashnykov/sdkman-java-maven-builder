@@ -10,16 +10,18 @@ USER_UID			:=	1000
 USER_GID			:=	1000
 USER_NAME			:=	user
 
-IMAGE_NAME 			:= 	$$DOCKER_LOGIN/sdkman:mvn-${MAVEN_VERSION}-jdk-${JAVA_VERSION}
+IMAGE_NAME				:= $$DOCKER_LOGIN/sdkman:mvn-${MAVEN_VERSION}-jdk-${JAVA_VERSION}
+IMAGE_INLINE_CACHE_NAME	:= $$DOCKER_LOGIN/sdkman-cache:mvn-${MAVEN_VERSION}-jdk-${JAVA_VERSION}
+
 SAMPLE_IMAGE_NAME	:= 	$$DOCKER_LOGIN/bitnami-tomcat9-jdk18-root-war:latest
-SAMPLE_IMAGE_FILE   ?= `pwd`/sample/Dockerifle
+SAMPLE_IMAGE_FILE	?= `pwd`/sample/Dockerifle
 
 DOCKER_REGISTRY     :=  docker.io
 export DOCKER_SCAN_SUGGEST=false
 
 # make sure docker is installed
-DOCKER_EXISTS := @printf "docker"
-DOCKER_WHICH := $(shell which docker)
+DOCKER_EXISTS	:= @printf "docker"
+DOCKER_WHICH	:= $(shell which docker)
 ifeq ($(strip $(DOCKER_WHICH)),)
 	DOCKER_EXISTS := @echo "ERROR: docker not found. See: https://docs.docker.com/get-docker/" && exit 1
 endif
@@ -61,16 +63,21 @@ check-env:
 login: check-env
 	@docker login --username $$DOCKER_LOGIN --password $$DOCKER_PWD $$DOCKER_REGISTRY
 
-#build: @ Build SDKMAN! Java/Maven builder image
+#build: @ Build remote cache for the SDKMAN! Java/Maven builder image 
+build-inline-cache: check-env
+	@DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_INLINE_CACHE_NAME) .
+	@docker run -it --rm -u $$UID $(IMAGE_NAME) bash
+
+#build: @ Build SDKMAN! Java/Maven builder image 
 build: check-env
-	@DOCKER_BUILDKIT=1 docker build --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_NAME) .	
+	@DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_NAME) .
 
-#run: @ Run builder image
-run: check-env 	login
-	@docker run --rm -u $$UID $(IMAGE_NAME) mvn -version
+#verison: @ Run maven version SDKMAN! Java/Maven builder image
+version: check-env build
+	@docker run  --rm -u $$UID $(IMAGE_NAME) mvn -version
 
-#it: @ Run interactive builder image 
-it: check-env
+#it: @ Run SDKMAN! Java/Maven builder image interactively
+it: check-env build
 	@docker run -it --rm -u $$UID $(IMAGE_NAME) bash
 
 #push: @ Push builder image to a registry
