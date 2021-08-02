@@ -63,14 +63,14 @@ check-env:
 login: check-env
 	@docker login --username $$DOCKER_LOGIN --password $$DOCKER_PWD $$DOCKER_REGISTRY
 
-#build: @ Build remote cache for the SDKMAN! Java/Maven builder image 
+#build-inline-cache: @ Build remote cache for the SDKMAN! Java/Maven builder image 
 build-inline-cache: check-env
 	@DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_INLINE_CACHE_NAME) .
 	@docker run -it --rm -u $$UID $(IMAGE_NAME) bash
 
 #build: @ Build SDKMAN! Java/Maven builder image 
 build: check-env
-	@DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_NAME) .
+	@DOCKER_BUILDKIT=1 docker build --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_NAME) .
 
 #verison: @ Run maven version SDKMAN! Java/Maven builder image
 version: check-env build
