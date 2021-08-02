@@ -66,11 +66,11 @@ login: check-env
 #build-inline-cache: @ Build remote cache for the SDKMAN! Java/Maven builder image 
 build-inline-cache: check-env
 	@DOCKER_BUILDKIT=1 docker build --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_INLINE_CACHE_NAME) .
-	@docker run -it --rm -u $$UID $(IMAGE_NAME) bash
+	@DOCKER_BUILDKIT=1 docker push $(IMAGE_INLINE_CACHE_NAME)
 
 #build: @ Build SDKMAN! Java/Maven builder image 
 build: check-env
-	@DOCKER_BUILDKIT=1 docker build --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_NAME) .
+	@DOCKER_BUILDKIT=1 docker build --cache-from $(IMAGE_INLINE_CACHE_NAME) --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_NAME) .
 
 #verison: @ Run maven version SDKMAN! Java/Maven builder image
 version: check-env build
@@ -88,13 +88,22 @@ IMAGE_CMD := docker images --filter=reference=$(IMAGE_NAME) --format "{{.ID}}" |
 IMAGE_ID  := $(shell $(IMAGE_CMD))
 IMAGE_CNT := $(shell $(IMAGE_CMD) | wc -l)
 
+IMAGE_CACHE_CMD := docker images --filter=reference=$(IMAGE_INLINE_CACHE_NAME) --format "{{.ID}}" | awk '{print $$1}'
+IMAGE_CACHE_ID  := $(shell $(IMAGE_CACHE_CMD))
+IMAGE_CACHE_CNT := $(shell $(IMAGE_CACHE_CMD) | wc -l)
+
 #delete: @ Delete builder image locally
 delete: check-env
 
 ifeq ($(shell test $(IMAGE_CNT) -gt 0; echo $$?),0)
 # remove image
 	docker rmi -f $(IMAGE_ID) 
-endif	
+endif
+
+ifeq ($(shell test $(IMAGE_CACHE_CNT) -gt 0; echo $$?),0)
+# remove image inline cache
+	docker rmi -f $(IMAGE_CACHE_ID) 
+endif
 
 CNT_TAG_CMD     := docker images | grep '<none>' | awk '{print $$3}'
 CNT_TAG         := $(shell $(CNT_TAG_CMD) | wc -l)
