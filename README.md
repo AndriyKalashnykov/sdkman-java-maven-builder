@@ -4,13 +4,19 @@ Docker image with various Java and Maven versions to build Java Maven projects
 ## Pre-Requisites
 
 * Docker
-
 * DockerHub login and password
-  
     ```bash
     DOCKER_LOGIN= 
     DOCKER_PWD=
     ```
+
+### Help
+
+```bash
+make help
+```
+
+![make-help](./images/help.png)
 
 ### Login to the Docker Image registry
 

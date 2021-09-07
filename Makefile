@@ -45,7 +45,7 @@ help:
 	@echo
 	@echo "Commands :"
 	@echo
-	@grep -E '[a-zA-Z\.\-]+:.*?@ .*$$' $(MAKEFILE_LIST)| tr -d '#' | awk 'BEGIN {FS = ":.*?@ "}; {printf "\033[32m%-13s\033[0m - %s\n", $$1, $$2}'
+	@grep -E '[a-zA-Z\.\-]+:.*?@ .*$$' $(MAKEFILE_LIST)| tr -d '#' | awk 'BEGIN {FS = ":.*?@ "}; {printf "\033[32m%-18s\033[0m - %s\n", $$1, $$2}'
 
 #check-env: @ Check environment variables and installed tools
 check-env:
@@ -72,7 +72,7 @@ build-inline-cache: check-env
 build: check-env
 	@DOCKER_BUILDKIT=1 docker build --cache-from $(IMAGE_INLINE_CACHE_NAME) --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_NAME) .
 
-#verison: @ Run maven version SDKMAN! Java/Maven builder image
+#verison: @ Run 'maven version' on SDKMAN! Java/Maven builder image
 version: check-env build
 	@docker run  --rm -u $$UID $(IMAGE_NAME) mvn -version
 
