@@ -1,5 +1,6 @@
 # SDKMan! Java/Maven Builder docker image
 [![Docker Pulls](https://img.shields.io/docker/pulls/andriykalashnykov/sdkman.svg)](https://hub.docker.com/r/andriykalashnykov/sdkman/)
+
 Docker image with various Java and Maven versions to build Java Maven projects
 
 ## Pre-Requisites
