@@ -1,4 +1,5 @@
 # SDKMan! Java/Maven Builder docker image
+
 [![main](https://github.com/AndriyKalashnykov/sdkman-java-maven-builder/actions/workflows/main.yml/badge.svg)](https://github.com/AndriyKalashnykov/sdkman-java-maven-builder/actions/workflows/main.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/andriykalashnykov/sdkman.svg)](https://hub.docker.com/r/andriykalashnykov/sdkman/)
 
