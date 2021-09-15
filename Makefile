@@ -77,7 +77,7 @@ version: check-env build
 	@docker run  --rm -u $$UID $(IMAGE_NAME) mvn -version
 
 #it: @ Run SDKMAN! Java/Maven builder image interactively
-it: check-env build
+it: check-env
 	@docker run -it --rm -u $$UID $(IMAGE_NAME) bash
 
 #push: @ Push builder image to a registry
