@@ -48,7 +48,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./sample/
-        file:  ./sample//Dockerfile
+        file:  ./sample/Dockerfile
         platforms: linux/amd64
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war:latest
