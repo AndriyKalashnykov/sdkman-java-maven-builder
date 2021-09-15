@@ -42,8 +42,8 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman:latest
-        cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache
-        cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache
+        cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:latest
+        cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:latest
     - name: Build and push sample image
       uses: docker/build-push-action@v2
       with:
@@ -52,5 +52,5 @@ jobs:
         platforms: linux/amd64
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war:latest
-        cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war-cache
-        cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war-cache
+        cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war-cache:latest
+        cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war-cache:latest
