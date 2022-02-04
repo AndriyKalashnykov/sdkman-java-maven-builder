@@ -1,6 +1,7 @@
 [![main](https://github.com/AndriyKalashnykov/sdkman-java-maven-builder/actions/workflows/main.yml/badge.svg)](https://github.com/AndriyKalashnykov/sdkman-java-maven-builder/actions/workflows/main.yml)
 [![Docker Pulls](https://img.shields.io/docker/pulls/andriykalashnykov/sdkman.svg)](https://hub.docker.com/r/andriykalashnykov/sdkman/)
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FAndriyKalashnykov%2Fsdkman-java-maven-builder&count_bg=%2333CD56&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # SDKMan! Java/Maven Builder docker image
 
 Docker image with various Java and Maven versions to build Java Maven projects
