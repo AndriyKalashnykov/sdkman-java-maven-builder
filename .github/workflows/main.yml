@@ -5,9 +5,13 @@ name: main
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+    tags: ['v*']
   pull_request:
-    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -31,6 +35,7 @@ jobs:
           ${{ runner.os }}-buildx-
 
     - name: Login to DockerHub
+      if: github.ref_type == 'tag'
       uses: docker/login-action@v1.10.0
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -45,7 +50,7 @@ jobs:
           JAVA_VERSION=16.0.1.hs-adpt
           MAVEN_VERSION=3.8.1        
         platforms: linux/amd64
-        push: true
+        push: ${{ github.ref_type == 'tag' }}
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman:mvn-3.8.1-jdk-16.0.1.hs-adpt
         cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-16.0.1.hs-adpt
         cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-16.0.1.hs-adpt
@@ -59,7 +64,7 @@ jobs:
           JAVA_VERSION=11.0.11.hs-adpt
           MAVEN_VERSION=3.8.1        
         platforms: linux/amd64
-        push: true
+        push: ${{ github.ref_type == 'tag' }}
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman:mvn-3.8.1-jdk-11.0.11.hs-adpt
         cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-11.0.11.hs-adpt
         cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-11.0.11.hs-adpt
@@ -73,7 +78,7 @@ jobs:
           JAVA_VERSION=8.0.292.hs-adpt
           MAVEN_VERSION=3.8.1
         platforms: linux/amd64
-        push: true
+        push: ${{ github.ref_type == 'tag' }}
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman:mvn-3.8.1-jdk-8.0.292.hs-adpt
         cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-8.0.292.hs-adpt
         cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-8.0.292.hs-adpt        
@@ -83,7 +88,7 @@ jobs:
         context: ./sample/
         file:  ./sample/Dockerfile
         platforms: linux/amd64
-        push: true
+        push: ${{ github.ref_type == 'tag' }}
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war:latest
         cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war-cache:latest
         cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war-cache:latest
