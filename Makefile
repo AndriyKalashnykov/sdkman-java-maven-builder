@@ -40,7 +40,6 @@ endif
 
 #help: @ List available tasks on this project
 help:
-	@clear
 	@echo "Usage: make COMMAND"
 	@echo
 	@echo "Commands :"
@@ -168,5 +167,7 @@ delete-sample: check-env
 
 ifeq ($(shell test $(SAMPLE_IMAGE_CNT) -gt 0; echo $$?),0)
 # remove sample image
-	docker rmi -f $(SAMPLE_IMAGE_ID) 
-endif	
+	docker rmi -f $(SAMPLE_IMAGE_ID)
+endif
+
+.PHONY: help check-env login build-inline-cache build version it push delete cleanup build-sample start-sample test-sample stop-sample delete-sample

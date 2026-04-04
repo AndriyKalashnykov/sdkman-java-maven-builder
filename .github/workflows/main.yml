@@ -9,6 +9,10 @@ on:
     tags: ['v*']
   pull_request:
 
+permissions:
+  contents: read
+  packages: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -18,16 +22,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Download repository
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       
     - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1.2.0
+      uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4
       
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1.6.0
+      uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4
       
     - name: Cache Docker layers
-      uses: actions/cache@v2.1.6
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5
       with:
         path: /tmp/.buildx-cache
         key: ${{ runner.os }}-buildx-${{ github.sha }}
@@ -36,13 +40,13 @@ jobs:
 
     - name: Login to DockerHub
       if: github.ref_type == 'tag'
-      uses: docker/login-action@v1.10.0
+      uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and push sdkman image - mvn-3.8.1-jdk-16.0.1.hs-adpt
-      uses: docker/build-push-action@v2.7.0
+      uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
       with:
         context: .
         file: ./Dockerfile
@@ -56,7 +60,7 @@ jobs:
         cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-16.0.1.hs-adpt
 
     - name: Build and push sdkman image - mvn-3.8.1-jdk-11.0.11.hs-adpt
-      uses: docker/build-push-action@v2.7.0
+      uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
       with:
         context: .
         file: ./Dockerfile
@@ -70,7 +74,7 @@ jobs:
         cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-11.0.11.hs-adpt
 
     - name: Build and push sdkman image - mvn-3.8.1-jdk-8.0.292.hs-adpt
-      uses: docker/build-push-action@v2.7.0
+      uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
       with:
         context: .
         file: ./Dockerfile
@@ -83,7 +87,7 @@ jobs:
         cache-from: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-8.0.292.hs-adpt
         cache-to: ${{ secrets.DOCKERHUB_USERNAME }}/sdkman-cache:mvn-3.8.1-jdk-8.0.292.hs-adpt        
     - name: Build and push sample image
-      uses: docker/build-push-action@v2.7.0
+      uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
       with:
         context: ./sample/
         file:  ./sample/Dockerfile
