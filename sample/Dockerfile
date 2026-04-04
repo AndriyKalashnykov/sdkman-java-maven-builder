@@ -1,7 +1,7 @@
 ARG JAVA_VERSION="11.0.30-tem"
 ARG MAVEN_VERSION="3.9.14"
 
-FROM andriykalashnykov/sdkman:mvn-$MAVEN_VERSION-jdk-$JAVA_VERSION as build
+FROM andriykalashnykov/sdkman:mvn-$MAVEN_VERSION-jdk-$JAVA_VERSION AS build
 
 WORKDIR $HOME/
 

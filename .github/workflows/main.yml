@@ -88,12 +88,13 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Build and push sample image
+      if: github.ref_type == 'tag'
       uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7
       with:
         context: ./sample/
         file: ./sample/Dockerfile
         platforms: linux/amd64
-        push: ${{ github.ref_type == 'tag' }}
+        push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/bitnami-tomcat9-jdk18-root-war:latest
         cache-from: type=gha
         cache-to: type=gha,mode=max
