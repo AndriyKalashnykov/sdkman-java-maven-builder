@@ -4,8 +4,8 @@ SHELL  				:= /bin/bash
 SDKMAN				:= $(HOME)/.sdkman/bin/sdkman-init.sh
 CURRENT_USER_NAME	:= $(shell whoami)
 
-JAVA_VERSION 		:= 	11.0.11.hs-adpt
-MAVEN_VERSION		:= 	3.8.1
+JAVA_VERSION 		:= 	21.0.10-tem
+MAVEN_VERSION		:= 	3.9.14
 USER_UID			:=	1000
 USER_GID			:=	1000
 USER_NAME			:=	user
@@ -14,7 +14,7 @@ IMAGE_NAME				:= $$DOCKER_LOGIN/sdkman:mvn-${MAVEN_VERSION}-jdk-${JAVA_VERSION}
 IMAGE_INLINE_CACHE_NAME	:= $$DOCKER_LOGIN/sdkman-cache:mvn-${MAVEN_VERSION}-jdk-${JAVA_VERSION}
 
 SAMPLE_IMAGE_NAME	:= 	$$DOCKER_LOGIN/bitnami-tomcat9-jdk18-root-war:latest
-SAMPLE_IMAGE_FILE	?= `pwd`/sample/Dockerifle
+SAMPLE_IMAGE_FILE	?= `pwd`/sample/Dockerfile
 
 DOCKER_REGISTRY     :=  docker.io
 export DOCKER_SCAN_SUGGEST=false
@@ -71,7 +71,7 @@ build-inline-cache: check-env
 build: check-env
 	@DOCKER_BUILDKIT=1 docker build --cache-from $(IMAGE_INLINE_CACHE_NAME) --build-arg JAVA_VERSION=${JAVA_VERSION} --build-arg MAVEN_VERSION=${MAVEN_VERSION} --build-arg USER_UID=${USER_UID} --build-arg USER_GID=${USER_GID} --build-arg USER_NAME=${USER_NAME} -t $(IMAGE_NAME) .
 
-#verison: @ Run 'maven version' on SDKMAN! Java/Maven builder image
+#version: @ Run 'maven version' on SDKMAN! Java/Maven builder image
 version: check-env build
 	@docker run  --rm -u $$UID $(IMAGE_NAME) mvn -version
 

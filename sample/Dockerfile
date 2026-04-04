@@ -1,5 +1,5 @@
-ARG JAVA_VERSION="8.0.292.hs-adpt"
-ARG MAVEN_VERSION="3.8.1"
+ARG JAVA_VERSION="11.0.30-tem"
+ARG MAVEN_VERSION="3.9.14"
 
 FROM andriykalashnykov/sdkman:mvn-$MAVEN_VERSION-jdk-$JAVA_VERSION as build
 

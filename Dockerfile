@@ -1,15 +1,15 @@
-FROM debian:stretch-slim
+FROM debian:bookworm-slim
 
 # Defining default Java and Maven version
-ARG JAVA_VERSION="11.0.11.hs-adpt"
-ARG MAVEN_VERSION="3.8.1"
+ARG JAVA_VERSION="21.0.10-tem"
+ARG MAVEN_VERSION="3.9.14"
 
 # Defining default non-root user UID, GID, and name
 ARG USER_UID="1000"
 ARG USER_GID="1000"
 ARG USER_NAME="user"
 
-ENV TERM xterm
+ENV TERM=xterm
 ENV TZ=America/New_York
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -19,7 +19,7 @@ RUN groupadd -g $USER_GID $USER_NAME && useradd -m -g $USER_GID -u $USER_UID $US
 
 # Installing basic packages
 RUN apt-get -y update && \
-	apt-get install -y sudo ssh locales lsb-core nano zip unzip curl wget tree git gitg git-core \ 
+	apt-get install -y sudo ssh locales lsb-release nano zip unzip curl wget tree git \
     gnupg gnupg2 net-tools ca-certificates jq httpie htop nmon iputils-ping html-xml-utils libxml2-utils xmlstarlet libnss3-tools \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& rm -rf /tmp/* \
@@ -28,7 +28,7 @@ RUN apt-get -y update && \
     && chown -R $USER_UID:$USER_GID  /home/$USER_NAME/ \
     && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
 
-RUN curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.20.0/pack-v0.20.0-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack
+RUN curl -sSL "https://github.com/buildpacks/pack/releases/download/v0.40.2/pack-v0.40.2-linux.tgz" | tar -C /usr/local/bin/ --no-same-owner -xzv pack
 
 # Switching to non-root user to install SDKMAN!
 USER $USER_UID:$USER_GID

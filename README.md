@@ -38,7 +38,7 @@ make build
 ### Build Docker Image with alternative JAVA_VERSION and MAVEN_VERSION and or different UID,GID,USER_NAME
 
 ```bash
-make build JAVA_VERSION=16.0.1.hs-adpt MAVEN_VERSION=3.8.1 USER_UID=1000 USER_GID=1000 USER_NAME=user
+make build JAVA_VERSION=17.0.18-tem MAVEN_VERSION=3.9.14 USER_UID=1000 USER_GID=1000 USER_NAME=user
 ```
 
 ### Run Docker Image Interactively

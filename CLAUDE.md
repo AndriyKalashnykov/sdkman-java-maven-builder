@@ -22,13 +22,29 @@ make stop-sample       # Stop sample image
 make delete-sample     # Delete sample image locally
 ```
 
+## Architecture
+
+- Base image: `debian:bookworm-slim` (Debian 12)
+- Java: Eclipse Temurin via SDKMAN (default: 21.0.10-tem)
+- Maven: 3.9.14 via SDKMAN
+- Pack CLI: v0.40.2 (Cloud Native Buildpacks)
+- CI builds three Java variants: 21 (LTS), 17 (LTS), 11 (LTS)
+
 ## Skills
 
-- Makefile -> /makefile
-- README.md -> /readme
-- .github/workflows/*.yml -> /ci-workflow
+| File(s) | Skill |
+|---------|-------|
+| `CLAUDE.md` | `/claude` |
+| `Makefile` | `/makefile` |
+| `README.md` | `/readme` |
+| `.github/workflows/*.yml` | `/ci-workflow` |
+| `Dockerfile` | Docker image build |
 
 ## Improvement Backlog
 
 - Add renovate.json for automated dependency updates
-- Update SDKMAN Java/Maven versions
+- Migrate sample/Dockerfile to use a maintained Tomcat base image (bitnami-tomcat9-jdk18 may be EOL)
+- Consider multi-stage build optimization to reduce final image size
+- Add health check to Dockerfile
+- Consider adding `make ci` target for local CI validation
+- Evaluate replacing `build-inline-cache` with GitHub Actions cache (type=gha) for all builds
